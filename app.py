@@ -751,27 +751,35 @@ def evaluate_plan(
 
 with st.sidebar:
 
-    st.html("""
-    <div style="
-        font-size:25px;
-        font-weight:800;
-        color:white;
-        margin-bottom:5px;
-    ">
-        AI Study Planner Pro
-    </div>
+    st.markdown(
+        """
+        <div style="
+            text-align:center;
+            padding:8px 5px 15px 5px;
+        ">
+            <div style="font-size:52px;">📚</div>
 
-    <div style="
-        color:#73D7FF;
-        font-size:15px;
-        margin-top:6px;
-        margin-bottom:20px;
-    ">
-        Plan • Learn • Achieve
-    </div>
-    """)
+            <div style="
+                font-size:25px;
+                font-weight:800;
+                color:white;
+            ">
+                AI Study Planner Pro
+            </div>
 
-    st.markdown("---")
+            <div style="
+                color:#73D7FF;
+                font-size:15px;
+                margin-top:6px;
+            ">
+                Plan • Learn • Achieve
+            </div>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
+
+    st.divider()
 
     st.markdown("### 📌 Study Constraints")
 
@@ -793,19 +801,25 @@ with st.sidebar:
         step=0.5
     )
 
+    st.markdown("### 📚 Subjects")
+
     subjects_text = st.text_area(
         "Subjects",
-        value="Python, Database, AI, Blockchain"
+        value="Python, Database, AI, Blockchain",
+        height=80
     )
+
+    st.markdown("### ⭐ Priority Topics")
 
     priority_text = st.text_area(
         "Priority Topics",
-        value="AI, Python"
+        value="AI, Python",
+        height=80
     )
 
-    st.markdown("### ⚙️ Advanced Features")
+    st.markdown("### 🧠 Advanced Features")
 
-    weak_text = st.text_area(
+    weak_text = st.text_input(
         "Difficult / Weak Subjects",
         value="Database"
     )
@@ -821,45 +835,73 @@ with st.sidebar:
 
     st.markdown("### 📅 Study Days")
 
-    study_days = []
+    day_col1, day_col2 = st.columns(2)
 
-    days = [
-        "Monday",
-        "Tuesday",
-        "Wednesday",
-        "Thursday",
-        "Friday",
-        "Saturday",
-        "Sunday"
-    ]
+    selected_days = []
 
-    for day in days:
+    with day_col1:
+
         if st.checkbox(
-            day,
-            value=day in [
-                "Monday",
-                "Tuesday",
-                "Wednesday",
-                "Thursday",
-                "Friday"
-            ]
+            "Mon",
+            value=True
         ):
-            study_days.append(day)
+            selected_days.append("Mon")
+
+        if st.checkbox(
+            "Wed",
+            value=True
+        ):
+            selected_days.append("Wed")
+
+        if st.checkbox(
+            "Fri",
+            value=True
+        ):
+            selected_days.append("Fri")
+
+        if st.checkbox(
+            "Sun",
+            value=False
+        ):
+            selected_days.append("Sun")
+
+    with day_col2:
+
+        if st.checkbox(
+            "Tue",
+            value=True
+        ):
+            selected_days.append("Tue")
+
+        if st.checkbox(
+            "Thu",
+            value=True
+        ):
+            selected_days.append("Thu")
+
+        if st.checkbox(
+            "Sat",
+            value=False
+        ):
+            selected_days.append("Sat")
 
     add_revision = st.checkbox(
-        "Add Revision Sessions",
+        "🔄 Add Revision Sessions",
         value=True
     )
 
     add_mock = st.checkbox(
-        "Add Mini Mock Tests",
+        "📝 Add Mini Mock Tests",
         value=True
     )
 
-    generate = st.button(
+    st.markdown("")
+
+    generate_clicked = st.button(
         "🚀 Generate Study Plan",
         use_container_width=True
-    )       
+    )
+
 
 # ============================================================
 # HERO HEADER
@@ -1094,7 +1136,7 @@ for column, process in zip(
 # GENERATE PLAN
 # ============================================================
 
-if generate_clicked:
+if generate:
 
     subjects = parse_items(
         subjects_text
